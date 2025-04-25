@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Перенаправление на HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Запрет доступа к敏感 файлам
+    <FilesMatch "\.(env|json|config|lock|gitignore|md|sql|log)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    
+    # Запрет листинга директорий
+    Options -Indexes
+    
+    # Кастомная страница 404
+    ErrorDocument 404 /404.php
+</IfModule>
+
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 12M
+    php_value memory_limit 256M
+    php_value max_execution_time 120
+</IfModule>
